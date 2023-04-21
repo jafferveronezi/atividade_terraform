@@ -3,7 +3,7 @@ resource "aws_vpc" "dev-vpc" {
   cidr_block = "172.16.1.0/25" # o /25 indica a quantidade de IPs disponíveis para máquinas na rede
 
   tags = {
-    Name = "VPC 1 - DE-OP-009-trabalho_final"
+    Name = "VPC 1 - DE-OP-009-trabalho-final"
   }
 }
 
@@ -15,7 +15,7 @@ resource "aws_subnet" "private-subnet" {
   availability_zone = var.subnet_availability_zone[count.index]
 
   tags = {
-    Name = "Subnet ${count.index + 1} - DE-OP-009-trabalho_final"
+    Name = "Subnet ${count.index + 1} - DE-OP-009-trabalho-final"
   }
 }
 

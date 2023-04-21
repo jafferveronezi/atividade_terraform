@@ -6,7 +6,7 @@ resource "aws_security_group" "allow_db" {
   vpc_id      = aws_vpc.dev-vpc.id
 
   ingress {
-    description = "Porta de conexao ao Postgres"
+    description = "Porta de conexao ao Mysql"
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
@@ -22,12 +22,12 @@ resource "aws_security_group" "allow_db" {
   }
 
   tags = {
-    Name = "DE-OP-009-trabalho_final"
+    Name = "DE-OP-009-trabalho-final"
   }
 }
 
 # Cria uma instância de RDS
-resource "aws_db_instance" "mysql" {
+resource "aws_db_instance" "my_rds_instance" {
   allocated_storage = 10
   db_name           = "mydb"
   engine            = "postgres"
@@ -47,3 +47,20 @@ resource "aws_db_instance" "mysql" {
   db_subnet_group_name   = aws_db_subnet_group.db-subnet.name
   vpc_security_group_ids = [aws_security_group.allow_db.id]
 }
+
+# Cria uma instância RDS
+# resource "aws_db_instance" "my_rds_instance" {
+#   allocated_storage    = 10
+#   engine               = "mysql"
+#   engine_version       = "5.7"
+#   instance_class       = "db.t2.micro"
+#   db_name              = "my_rds_instance"
+#   username             = "admin"
+#   password             = "admin123"
+#   parameter_group_name = "default.mysql5.7"
+#   port                 = 3306
+
+#   skip_final_snapshot  = true
+#   db_subnet_group_name  = aws_db_subnet_group.db-subnet.name
+#   vpc_security_group_ids = [aws_security_group.allow_db.id]
+# }

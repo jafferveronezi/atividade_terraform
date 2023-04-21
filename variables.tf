@@ -15,3 +15,9 @@ variable "subnet_count" {
   default = 3
   description = "Número de subnets a serem criadas"
 }
+
+variable "feature_name" {
+  type        = string
+  default = "postgres"
+  description = "Nome do bd que concede permissões de banco de dados à função Lambda"
+}
