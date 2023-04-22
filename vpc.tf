@@ -1,6 +1,6 @@
 # Cria uma VPC, um tipo de rede privada dentro da AWS.
 resource "aws_vpc" "dev-vpc" {
-  cidr_block = "172.16.1.0/25" # o /25 indica a quantidade de IPs disponíveis para máquinas na rede
+  cidr_block = var.vpc_cidr_block # o /25 indica a quantidade de IPs disponíveis para máquinas na rede
 
   tags = {
     Name = "VPC 1 - DE-OP-009-trabalho-final"
@@ -20,6 +20,6 @@ resource "aws_subnet" "private-subnet" {
 }
 
 resource "aws_db_subnet_group" "db-subnet" {
-  name       = "db_subnet_group"
+  name       = var.vpc_db_subnet_group
   subnet_ids = [aws_subnet.private-subnet[0].id, aws_subnet.private-subnet[1].id]
 }
