@@ -76,6 +76,12 @@ variable "db_port" {
   description = "Porta do banco de dados"
 }
 
+variable "db_identifier" {
+  type    = string
+  default = "my-test-database"
+  description = "Instance Identifier do banco de dados"
+}
+
 variable "db_skip_final_snapshot" {
   type    = bool
   default = true
@@ -109,6 +115,6 @@ variable "vpc_cidr_block" {
 
 variable "bucket_name" {
   type    = string
-  default = "de-op-009-bucket-lambda-trabalho-final"
+  default = "de-op-009-bucket-lambda-trabalho-final-jaffer"
   description = "Nome do Bucket"
 }

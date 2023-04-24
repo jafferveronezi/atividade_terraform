@@ -1,3 +1,9 @@
+data "aws_caller_identity" "current" {}
+
+locals {
+  account_id = data.aws_caller_identity.current.account_id
+}
+
 # Cria uma Role para a Lambda
 data "aws_iam_policy_document" "assume_role" {
   statement {
@@ -15,44 +21,10 @@ resource "aws_iam_role" "lambda_role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
-# Cria uma política para conceder acesso ao RDS
-data "aws_iam_policy_document" "db_access" {
-  statement {
-    effect = "Allow"
-    actions = ["rds-db:connect"]
-    resources = ["*"]
-  }
-}
-
-resource "aws_iam_policy" "lambda_rds_policy" {
-  name   = "lambda_rds_policy"
-  policy = data.aws_iam_policy_document.db_access.json
-}
-
-# Anexa a política de acesso ao RDS à função IAM do Lambda
-resource "aws_iam_role_policy_attachment" "lambda_rds_policy_attachment" {
-  policy_arn = aws_iam_policy.lambda_rds_policy.arn
-  role       = aws_iam_role.lambda_role.name
-}
-
 # Necessária para executar funções do AWS Lambda com recursos VPC
 resource "aws_iam_role_policy_attachment" "lambda_vpc_access_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
   role       = aws_iam_role.lambda_role.name
-}
-# Concede permissões de banco de dados à função Lambda
-resource "aws_db_instance_role_association" "my_rds_association" {
-  db_instance_identifier = aws_db_instance.my_rds_instance.identifier
-  role_arn               = aws_iam_role.lambda_role.arn
-  feature_name           = var.feature_name
-}
-
-# Adiciona permissão à Lambda para acessar o RDS
-resource "aws_lambda_permission" "rds_lambda_permission" {
-  statement_id  = "AllowExecutionFromLambda"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.my_lambda.arn
-  principal     = "rds.amazonaws.com"
 }
 
 # Cria uma função Lambda
@@ -72,12 +44,18 @@ resource "aws_lambda_function" "my_lambda" {
 
   environment {
     variables = {
-      DB_NAME     = var.db_name
-      DB_USER     = var.db_username
-      DB_PASSWORD = var.db_password
+      DB_NAME     = aws_db_instance.my_rds_instance.db_name
+      DB_USER     = aws_db_instance.my_rds_instance.username
+      DB_PASSWORD = aws_db_instance.my_rds_instance.password
       DB_HOST     = aws_db_instance.my_rds_instance.endpoint
-      DB_PORT     = var.db_port
+      DB_PORT     = aws_db_instance.my_rds_instance.port
     }
+  }
+
+  vpc_config {
+    #verificar nomes
+    subnet_ids         = [aws_subnet.private-subnet[0].id, aws_subnet.private-subnet[1].id]
+    security_group_ids = [aws_security_group.allow_db.id]
   }
 
   depends_on = [aws_iam_policy.lambda_s3_policy]

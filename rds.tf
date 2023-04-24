@@ -36,6 +36,7 @@ resource "aws_db_instance" "my_rds_instance" {
   username          = var.db_username
   password          = var.db_password
   port              = var.db_port
+  identifier        = var.db_identifier
   # Parâmetro que indica se o DB vai ser acessível publicamente ou não.
   # Se quiser adicionar isso, preciso de um internet gateway na minha subnet. Em outras palavras, preciso permitir acesso "de fora" da aws.
   #publicly_accessible    = true
