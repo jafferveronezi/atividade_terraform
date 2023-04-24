@@ -79,6 +79,8 @@ resource "aws_lambda_function" "my_lambda" {
       DB_PORT     = var.db_port
     }
   }
+
+  depends_on = [aws_iam_policy.lambda_s3_policy]
 }
 
 # Cria um Bucket S3
