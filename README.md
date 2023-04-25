@@ -1,26 +1,5 @@
+# TRABALHO TERRAFORM
 
-# Instruções Terraform
+##### Nosso trabalho consiste em criar um bucket S3,  uma Lambda Function com trigger de bucket S3 e um banco de dados RDS para guardar os dados. Este banco de dados foi criado usando Postgres.
 
-### Iniciar o terraform
-
-* terraform init
-
-### Validar o arquivo terraform
-
-* terraform validate 
-
-### Rodar o seu arquivo para testar
-
-* terraform plan
-
-### Salvar o plano criado
-
-* terraform plan > plan.txt
-
-### Criar um bucket na AWS
-
-* terraform apply
-
-### Deletar o bucket na AWS
-
-* terraform destroy -auto-approve
+##### Podemos executar o trabalho por meio da utilização de arquivo shell script, através do comando **sh deploy.sh** no terminal.

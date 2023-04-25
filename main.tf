@@ -109,6 +109,15 @@ resource "aws_lambda_permission" "s3_lambda_permission" {
   source_arn    = "${aws_s3_bucket.my_bucket.arn}"
 }
 
+# Aqui eu crio um log group no cloudwatch... um log group pode ser considerado uma "pastinha" para armazenar todos os logs de uma determinada função
+resource "aws_cloudwatch_log_group" "function_log_group" {
+  name              = "/aws/lambda/${aws_lambda_function.my_lambda.function_name}"
+  retention_in_days = var.retention_logs
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
 # Adiciona a função Lambda à lista de eventos S3
 resource "aws_s3_bucket_notification" "my_s3_bucket_notification" {
   bucket = aws_s3_bucket.my_bucket.id
@@ -116,7 +125,6 @@ resource "aws_s3_bucket_notification" "my_s3_bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.my_lambda.arn
     events              = ["s3:ObjectCreated:*", "s3:ObjectRemoved:*"]
-    filter_prefix       = "input/"
   }
 
   depends_on = [aws_lambda_permission.s3_lambda_permission]

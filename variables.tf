@@ -60,13 +60,13 @@ variable "db_instance_class" {
 
 variable "db_username" {
   type        = string
-  default = "username"
+  default = "postgres"
   description = "Nome do usuário que você deseja criar para acessar o banco de dados."
 }
 
 variable "db_password" {
   type        = string
-  default = "password"
+  default = "postgres"
   description = "Password do usuário que você deseja criar para acessar o banco de dados."
 }
 
@@ -117,4 +117,10 @@ variable "bucket_name" {
   type    = string
   default = "de-op-009-bucket-lambda-trabalho-final-jaffer"
   description = "Nome do Bucket"
+}
+
+variable "retention_logs" {
+  type    = number
+  default = 1
+  description = "Retenção log"
 }
